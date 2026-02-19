@@ -1,5 +1,7 @@
+
 from django.shortcuts import render, redirect
 from .forms import AssignmentForm
+from .models import Assignment
 
 def home(request):
     username = request.COOKIES.get('username')
@@ -7,17 +9,14 @@ def home(request):
     if request.method == 'POST':
         form = AssignmentForm(request.POST, request.FILES)
         if form.is_valid():
-            # ❌ Do NOT save to database on Vercel
-            student_name = form.cleaned_data.get('student_name')
-
+            assignment = form.save()
             response = redirect('/')
-            response.set_cookie('username', student_name)
+            response.set_cookie('username', assignment.student_name)
             return response
     else:
         form = AssignmentForm()
 
-    # ❌ Disable database usage
-    assignments = []
+    assignments = Assignment.objects.all().order_by('-submitted_at')
 
     return render(request, 'home.html', {
         'form': form,
