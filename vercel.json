@@ -10,5 +10,9 @@
       "src": "/(.*)",
       "dest": "submission_project/wsgi.py"
     }
-  ]
+  ],
+  "env": {
+    "DJANGO_SETTINGS_MODULE": "submission_project.settings",
+    "PYTHONPATH": "."
+  }
 }
